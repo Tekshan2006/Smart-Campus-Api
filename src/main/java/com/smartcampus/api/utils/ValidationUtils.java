@@ -44,4 +44,10 @@ public class ValidationUtils {
             throw new LinkedResourceNotFoundException(errorMessage);
         }
     }
+    
+    public static void requireNotNull(Object obj, String errorMessage) {
+        if (obj == null) {
+            throw new InvalidPayloadException(errorMessage);
+        }
+    }
 }

@@ -25,17 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Path("/rooms")
 public class RoomResource {
     
-    // Upgraded to ConcurrentHashMap for Thread-Safety
+    
     private static Map<String, Room> roomDatabase = new ConcurrentHashMap<>();
 
-    // Static block runs ONLY ONCE when the server starts, solving the Request-Scope issue
-    static {
-        roomDatabase.put("LIB-301", new Room("LIB-301", "Library Quiet Study", 50));
-        roomDatabase.put("LAB-101", new Room("LAB-101", "Computer Lab", 30));
-    }
+    
 
     public RoomResource() {
-        // Constructor is now safely empty
+        
     }
 
     public static Map<String, Room> getRoomDatabase() { return roomDatabase; }

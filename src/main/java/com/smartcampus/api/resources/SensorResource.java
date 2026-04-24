@@ -71,6 +71,17 @@ public class SensorResource {
         return Response.created(location).entity(newSensor).build();
     }
     
+    @GET
+    @Path("/{sensorId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSensor(@PathParam("sensorId") String sensorId) {
+        ValidationUtils.requireFound(
+            sensorDatabase.containsKey(sensorId), 
+            "Sensor with ID '" + sensorId + "' was not found."
+        );
+        return Response.ok(sensorDatabase.get(sensorId)).build();
+    }
+    
     @Path("/{sensorId}/readings")
     public SensorReadingResource getSensorReadingResource(@PathParam("sensorId") String sensorId) {
         return new SensorReadingResource(sensorId);
