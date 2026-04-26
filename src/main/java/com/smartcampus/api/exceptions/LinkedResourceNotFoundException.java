@@ -8,6 +8,11 @@ package com.smartcampus.api.exceptions;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// Thrown when a related resource (like room for sensor) does not exist
 public class LinkedResourceNotFoundException extends RuntimeException {
-    public LinkedResourceNotFoundException(String message) { super(message); }
+    public LinkedResourceNotFoundException(String message) 
+    { 
+        super(message); 
+    }
 }

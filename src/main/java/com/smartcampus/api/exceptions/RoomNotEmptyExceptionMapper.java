@@ -14,6 +14,8 @@ import javax.ws.rs.ext.Provider;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// Maps RoomNotEmptyException to HTTP 409 Conflict response
 @Provider
 public class RoomNotEmptyExceptionMapper implements ExceptionMapper<RoomNotEmptyException> {
     @Override

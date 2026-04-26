@@ -14,6 +14,8 @@ import javax.ws.rs.ext.Provider;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// Maps SensorUnavailableException to HTTP 403 Forbidden response
 @Provider
 public class SensorUnavailableExceptionMapper implements ExceptionMapper<SensorUnavailableException> {
     @Override

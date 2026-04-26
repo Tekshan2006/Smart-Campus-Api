@@ -11,6 +11,8 @@ import java.util.List;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// This class represents a room with its details and associated sensors
 public class Room {
     
     private String id;
@@ -19,12 +21,14 @@ public class Room {
     private List<String> sensorIds = new ArrayList<>();
 
     public Room() {
+        
     }
 
     public Room(String id, String name, int capacity) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
+        
     }
 
     public String getId() {
@@ -41,6 +45,7 @@ public class Room {
 
     public void setName(String name) {
         this.name = name;
+        
     }
 
     public int getCapacity() {
@@ -50,9 +55,11 @@ public class Room {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
-
+    
+    // Stores IDs of sensors assigned to this room
     public List<String> getSensorIds() {
         return sensorIds;
+        
     }
 
     public void setSensorIds(List<String> sensorIds) {

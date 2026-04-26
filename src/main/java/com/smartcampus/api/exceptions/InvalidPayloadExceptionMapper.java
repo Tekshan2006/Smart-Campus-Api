@@ -15,6 +15,7 @@ import javax.ws.rs.ext.Provider;
  * @author G.M.K.T.Thaksara
  */
 
+// Maps InvalidPayloadException to HTTP 400 Bad Request with JSON error message
 @Provider
 public class InvalidPayloadExceptionMapper implements ExceptionMapper<InvalidPayloadException> {
     @Override
