@@ -41,7 +41,7 @@ All error responses return structured JSON. No raw stack traces are ever exposed
 ### Steps
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR-USERNAME/smart-campus-api.git
+   git clone https://github.com/Tekshan2006/smart-campus-api.git
    cd smart-campus-api
    ```
 
@@ -63,60 +63,109 @@ All error responses return structured JSON. No raw stack traces are ever exposed
 
 ```bash
 # 1. Discovery Endpoint
-curl -i -X GET http://localhost:8080/smart-campus-api/api/v1 -H "Accept: application/json"
+curl -X GET http://localhost:8080/smart-campus-api/api/v1 \
+  -H "Accept: application/json" | jq
+```
 
+``` bash
 # 2. Create Room (Proves 201 Created + Location header)
-curl -i -X POST http://localhost:8080/smart-campus-api/api/v1/rooms \
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/rooms \
   -H "Content-Type: application/json" \
-  -d '{"id":"LIB-304","name":"Final Study Room","capacity":40}'
-
+  -d '{
+    "id": "LIB-307",
+    "name": "Final Demo Room",
+    "capacity": 45
+  }' | jq
+```
+``` bash
 # 3. Get All Rooms
-curl -i -X GET http://localhost:8080/smart-campus-api/api/v1/rooms
-
+curl -X GET http://localhost:8080/smart-campus-api/api/v1/rooms | jq
+```
+``` bash
 # 4. Get Single Room
-curl -i -X GET http://localhost:8080/smart-campus-api/api/v1/rooms/LIB-304
-
+curl -X GET http://localhost:8080/smart-campus-api/api/v1/rooms/LIB-307 | jq
+```
+``` bash
 # 5. Create Sensor (valid roomId)
-curl -i -X POST http://localhost:8080/smart-campus-api/api/v1/sensors \
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors \
   -H "Content-Type: application/json" \
-  -d '{"id":"TEMP-005","type":"Temperature","status":"ACTIVE","currentValue":0.0,"roomId":"LIB-304"}'
-
+  -d '{
+    "id": "TEMP-008",
+    "type": "Temperature",
+    "status": "ACTIVE",
+    "currentValue": 0.0,
+    "roomId": "LIB-307"
+  }' | jq
+```
+``` bash
 # 6. Create Sensor with invalid roomId → Proves 422 Unprocessable Entity
-curl -i -X POST http://localhost:8080/smart-campus-api/api/v1/sensors \
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors \
   -H "Content-Type: application/json" \
-  -d '{"id":"CO2-999","type":"CO2","status":"ACTIVE","currentValue":0.0,"roomId":"NON-EXISTENT-ROOM"}'
-
+  -d '{
+    "id": "CO2-999",
+    "type": "CO2",
+    "status": "ACTIVE",
+    "currentValue": 0.0,
+    "roomId": "NON-EXISTENT-ROOM"
+  }' | jq
+```
+``` bash
 # 7. Filter Sensors by type
-curl -i -X GET "http://localhost:8080/smart-campus-api/api/v1/sensors?type=Temperature"
-
+curl -X GET "http://localhost:8080/smart-campus-api/api/v1/sensors?type=Temperature" | jq
+```
+``` bash
 # 8. Get Readings (sub-resource - initially empty)
-curl -i -X GET http://localhost:8080/smart-campus-api/api/v1/sensors/TEMP-005/readings
-
+curl -X GET http://localhost:8080/smart-campus-api/api/v1/sensors/TEMP-008/readings | jq
+```
+``` bash
 # 9. Post Reading + update parent currentValue
-curl -i -X POST http://localhost:8080/smart-campus-api/api/v1/sensors/TEMP-005/readings \
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors/TEMP-008/readings \
   -H "Content-Type: application/json" \
-  -d '{"id":"READ-004","timestamp":1745480000000,"value":25.3}'
-
+  -d '{
+    "id": "READ-011",
+    "timestamp": 1745484000000,
+    "value": 27.5
+  }' | jq
+```
+``` bash
 # 10. Verify currentValue was updated on the parent sensor
-curl -i -X GET http://localhost:8080/smart-campus-api/api/v1/sensors/TEMP-005
-
+curl -X GET http://localhost:8080/smart-campus-api/api/v1/sensors/TEMP-008 | jq
+```
+``` bash
 # 11. Delete Room with active sensors → Proves 409 Conflict Mapper
-curl -i -X DELETE http://localhost:8080/smart-campus-api/api/v1/rooms/LIB-304
-
+curl -X DELETE http://localhost:8080/smart-campus-api/api/v1/rooms/LIB-307 | jq
+```
+``` bash
 # 12. Create Maintenance Sensor
-curl -i -X POST http://localhost:8080/smart-campus-api/api/v1/sensors \
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors \
   -H "Content-Type: application/json" \
-  -d '{"id":"MAINT-003","type":"Occupancy","status":"MAINTENANCE","currentValue":0.0,"roomId":"LAB-101"}'
-
+  -d '{
+    "id": "MAINT-006",
+    "type": "Occupancy",
+    "status": "MAINTENANCE",
+    "currentValue": 0.0,
+    "roomId": "LIB-307"
+  }' | jq
+```
+``` bash
 # 13. Post Reading to Maintenance Sensor → Proves 403 Forbidden Mapper
-curl -i -X POST http://localhost:8080/smart-campus-api/api/v1/sensors/MAINT-003/readings \
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors/MAINT-006/readings \
   -H "Content-Type: application/json" \
-  -d '{"id":"READ-005","timestamp":1745481000000,"value":10}'
-
-# 14. Trigger Global 500/400 (Clean JSON Error instead of server crash)
-curl -i -X POST http://localhost:8080/smart-campus-api/api/v1/sensors \
+  -d '{
+    "id": "READ-012",
+    "timestamp": 1745485000000,
+    "value": 12.0
+  }' | jq
+```
+``` bash
+# 14. Trigger Global 500 (send invalid JSON)
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors/MAINT-006/readings \
   -H "Content-Type: application/json" \
-  -d 'INVALID JSON OR CORRUPTED PAYLOAD'
+  -d '{
+    "id": "READ-012",
+    "timestamp": 1745485000000,
+    "value": 12.0
+  }' | jq
 ```
 
 ## Coursework Report
@@ -163,3 +212,6 @@ Exposing raw Java stack traces reveals internal routing paths, framework library
 
 #### API Logging Filters
 ContainerRequestFilter and ContainerResponseFilter are the correct architectural choices for logging because they apply automatically to every request/response across the entire application, eliminating boilerplate code duplication in individual resource methods.
+
+## Conclusion
+This project successfully implements a robust RESTful API using JAX-RS, demonstrating proper architecture, validation, and error handling.
