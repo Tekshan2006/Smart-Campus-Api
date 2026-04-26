@@ -8,6 +8,8 @@ package com.smartcampus.api.models;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// This class represents a standard error response returned by the API
 public class ErrorMessage {
     private String error;
     private int status;
@@ -19,9 +21,19 @@ public class ErrorMessage {
         this.status = status;
     }
 
-    public String getError() { return error; }
-    public void setError(String error) { this.error = error; }
+    public String getError() { 
+        return error; 
+    }
+    
+    public void setError(String error) { 
+        this.error = error; 
+    }
 
-    public int getStatus() { return status; }
-    public void setStatus(int status) { this.status = status; }
+    public int getStatus() {
+        return status; 
+    }
+    
+    public void setStatus(int status) { 
+        this.status = status; 
+    }
 }

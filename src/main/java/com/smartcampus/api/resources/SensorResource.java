@@ -23,32 +23,42 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author G.M.K.T.Thaksara
  */
 
+// This resource handles operations related to sensors
 @Path("/sensors")
 public class SensorResource {
     
-    // Upgraded for Thread-Safety
+    // In-memory storage for sensors
     private static Map<String, Sensor> sensorDatabase = new ConcurrentHashMap<>();
     
-    public static Map<String, Sensor> getSensorDatabase() { return sensorDatabase; }
+    public static Map<String, Sensor> getSensorDatabase() { 
+        return sensorDatabase; 
+    
+    }
 
+    // Returns all sensors or filters by type if provided
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSensors(@QueryParam("type") String type) {
         if (type == null) {
+            
             return Response.ok(sensorDatabase.values()).build();
         }
         
         ValidationUtils.requireNonEmpty(type, "Type query parameter cannot be blank if provided.");
 
         List<Sensor> filteredList = new ArrayList<>();
-        for (Sensor sensor : sensorDatabase.values()) {
+        for (Sensor sensor : sensorDatabase.values()) 
+        {
             if (sensor.getType().equalsIgnoreCase(type.trim())) {
+                
                 filteredList.add(sensor);
             }
         }
+        
         return Response.ok(filteredList).build();
     }
 
+    // Creates a new sensor and links it to a room
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -60,30 +70,39 @@ public class SensorResource {
         ValidationUtils.requireUnique(sensorDatabase.containsKey(newSensor.getId()), "A sensor with ID '" + newSensor.getId() + "' already exists.");
         
         ValidationUtils.requireLinkedFound(
+                
             newSensor.getRoomId() != null && RoomResource.getRoomDatabase().containsKey(newSensor.getRoomId()), 
             "Linked Room not found. Cannot create sensor."
         );
 
         sensorDatabase.put(newSensor.getId(), newSensor);
+        
         RoomResource.getRoomDatabase().get(newSensor.getRoomId()).getSensorIds().add(newSensor.getId());
 
         URI location = uriInfo.getAbsolutePathBuilder().path(newSensor.getId()).build();
         return Response.created(location).entity(newSensor).build();
+        
     }
     
+    // Returns a specific sensor by ID
     @GET
     @Path("/{sensorId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSensor(@PathParam("sensorId") String sensorId) {
+        
         ValidationUtils.requireFound(
             sensorDatabase.containsKey(sensorId), 
             "Sensor with ID '" + sensorId + "' was not found."
+                
         );
         return Response.ok(sensorDatabase.get(sensorId)).build();
+        
     }
     
+    // Provides access to sensor readings as a sub-resource
     @Path("/{sensorId}/readings")
     public SensorReadingResource getSensorReadingResource(@PathParam("sensorId") String sensorId) {
+        
         return new SensorReadingResource(sensorId);
     }
 }

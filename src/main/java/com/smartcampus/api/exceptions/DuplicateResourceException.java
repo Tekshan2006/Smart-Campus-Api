@@ -8,6 +8,11 @@ package com.smartcampus.api.exceptions;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// Maps DuplicateResourceException to HTTP 409 Conflict response in JSON format
 public class DuplicateResourceException extends RuntimeException {
-    public DuplicateResourceException(String message) { super(message); }
+    public DuplicateResourceException(String message) 
+    { 
+        super(message); 
+    }
 }

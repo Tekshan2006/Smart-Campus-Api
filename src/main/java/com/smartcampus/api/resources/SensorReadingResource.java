@@ -23,24 +23,29 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author G.M.K.T.Thaksara
  */
 
+// This sub-resource manages sensor readings for a specific sensor
 public class SensorReadingResource {
     private String sensorId;
     
-    // Upgraded both the Map and the List for full Thread-Safety
+    // In-memory storage for sensor readings
     private static Map<String, List<SensorReading>> readingDatabase = new ConcurrentHashMap<>();
 
     public SensorReadingResource(String sensorId) {
         this.sensorId = sensorId;
+        
     }
 
+    // Returns all readings for a given sensor
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReadings() {
         ValidationUtils.requireFound(SensorResource.getSensorDatabase().containsKey(sensorId), "Cannot fetch readings: Sensor '" + sensorId + "' does not exist.");
         List<SensorReading> readings = readingDatabase.getOrDefault(sensorId, new CopyOnWriteArrayList<>());
+        
         return Response.ok(readings).build();
     }
 
+    // Adds a new reading and updates the sensor's current value
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -54,6 +59,7 @@ public class SensorReadingResource {
 
         if ("MAINTENANCE".equalsIgnoreCase(parentSensor.getStatus()) || "OFFLINE".equalsIgnoreCase(parentSensor.getStatus())) {
             throw new SensorUnavailableException("Sensor is currently offline or in maintenance.");
+            
         }
 
         List<SensorReading> existingReadings = readingDatabase.getOrDefault(sensorId, new CopyOnWriteArrayList<>());

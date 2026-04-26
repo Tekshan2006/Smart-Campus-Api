@@ -22,34 +22,44 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author G.M.K.T.Thaksara
  */
 
+// This resource handles all operations related to rooms
 @Path("/rooms")
 public class RoomResource {
     
-    
+    // In-memory storage for rooms
     private static Map<String, Room> roomDatabase = new ConcurrentHashMap<>();
 
     
 
     public RoomResource() {
         
+        
     }
 
-    public static Map<String, Room> getRoomDatabase() { return roomDatabase; }
-
+    public static Map<String, Room> getRoomDatabase() { 
+        return roomDatabase; 
+    
+    }
+    
+    // Returns all rooms
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRooms() {
         return Response.ok(roomDatabase.values()).build();
+        
     }
 
+    // Returns a specific room by ID
     @GET
     @Path("/{roomId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRoom(@PathParam("roomId") String roomId) {
         ValidationUtils.requireFound(roomDatabase.containsKey(roomId), "Room with ID '" + roomId + "' was not found.");
+        
         return Response.ok(roomDatabase.get(roomId)).build();
     }
 
+    // Creates a new room after validation
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,14 +67,17 @@ public class RoomResource {
         ValidationUtils.requireFound(newRoom != null, "Request body cannot be empty.");
         ValidationUtils.requireNonEmpty(newRoom.getId(), "Room ID cannot be empty.");
         ValidationUtils.requireNonEmpty(newRoom.getName(), "Room Name cannot be empty.");
+        
         ValidationUtils.requirePositive(newRoom.getCapacity(), "Room capacity must be greater than zero.");
         ValidationUtils.requireUnique(roomDatabase.containsKey(newRoom.getId()), "A room with ID '" + newRoom.getId() + "' already exists.");
 
         roomDatabase.put(newRoom.getId(), newRoom);
         URI location = uriInfo.getAbsolutePathBuilder().path(newRoom.getId()).build();
+        
         return Response.created(location).entity(newRoom).build();
     }
 
+    // Deletes a room if it has no associated sensors
     @DELETE
     @Path("/{roomId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -74,9 +87,11 @@ public class RoomResource {
         
         if (!room.getSensorIds().isEmpty()) {
             throw new RoomNotEmptyException("Cannot delete room with active sensors.");
+            
         }
         
         roomDatabase.remove(roomId);
+        
         return Response.noContent().build();
     }
 }

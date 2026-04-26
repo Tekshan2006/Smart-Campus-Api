@@ -14,13 +14,15 @@ import javax.ws.rs.ext.Provider;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// Maps ResourceNotFoundException to HTTP 404 Not Found with JSON response
 @Provider
 public class ResourceNotFoundExceptionMapper implements ExceptionMapper<ResourceNotFoundException> {
     @Override
     public Response toResponse(ResourceNotFoundException ex) {
         return Response.status(Response.Status.NOT_FOUND)
                 .entity(new ErrorMessage(ex.getMessage(), 404))
-                .type(MediaType.APPLICATION_JSON) // FIX 3: Explicit JSON type
+                .type(MediaType.APPLICATION_JSON)
                 .build();
     }
 }

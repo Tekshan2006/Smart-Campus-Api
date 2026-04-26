@@ -8,6 +8,11 @@ package com.smartcampus.api.exceptions;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// Thrown when trying to delete a room that still contains sensors
 public class RoomNotEmptyException extends RuntimeException {
-    public RoomNotEmptyException(String message) { super(message); }
+    public RoomNotEmptyException(String message) 
+    { 
+        super(message); 
+    }
 }

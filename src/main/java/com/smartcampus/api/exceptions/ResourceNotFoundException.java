@@ -8,6 +8,11 @@ package com.smartcampus.api.exceptions;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// This exception is used when a requested resource is not found
 public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String message) { super(message); }
+    public ResourceNotFoundException(String message) 
+    { 
+        super(message); 
+    }
 }

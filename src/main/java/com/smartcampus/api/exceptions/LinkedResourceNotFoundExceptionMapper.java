@@ -14,6 +14,8 @@ import javax.ws.rs.ext.Provider;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// Maps LinkedResourceNotFoundException to HTTP 422 Unprocessable Entity response
 @Provider
 public class LinkedResourceNotFoundExceptionMapper implements ExceptionMapper<LinkedResourceNotFoundException> {
     @Override

@@ -8,6 +8,11 @@ package com.smartcampus.api.exceptions;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// Thrown when a sensor is offline or under maintenance
 public class SensorUnavailableException extends RuntimeException {
-    public SensorUnavailableException(String message) { super(message); }
+    public SensorUnavailableException(String message) 
+    { 
+        super(message); 
+    }
 }

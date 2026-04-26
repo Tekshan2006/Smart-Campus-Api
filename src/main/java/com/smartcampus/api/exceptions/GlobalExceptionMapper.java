@@ -13,6 +13,8 @@ import javax.ws.rs.ext.Provider;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// Handles unexpected errors and returns a safe 500 Internal Server Error response
 @Provider
 public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
     @Override

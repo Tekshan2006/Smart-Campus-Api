@@ -8,6 +8,11 @@ package com.smartcampus.api.exceptions;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// This exception is thrown when the request body contains invalid or missing data
 public class InvalidPayloadException extends RuntimeException {
-    public InvalidPayloadException(String message) { super(message); }
+    public InvalidPayloadException(String message) 
+    { 
+        super(message); 
+    }
 }

@@ -18,6 +18,8 @@ import java.util.Map;
  *
  * @author G.M.K.T.Thaksara
  */
+
+// This resource provides API discovery information and available endpoints
 @Path("/")
 public class DiscoveryResource {
 
@@ -33,6 +35,7 @@ public class DiscoveryResource {
         // Dynamically build absolute URLs based on the server environment
         String baseUri = uriInfo.getBaseUri().toString();
         
+        // Returns API metadata and links for navigation
         Map<String, String> links = new HashMap<>();
         links.put("rooms", baseUri + "rooms");
         links.put("sensors", baseUri + "sensors");
