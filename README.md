@@ -159,7 +159,7 @@ curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors/MAINT-006/rea
 ```
 ``` bash
 # 14. Trigger Global 500 (send invalid JSON)
-curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors/MAINT-006/readings \
+curl -X PUT http://localhost:8080/smart-campus-api/api/v1/sensors/MAINT-006/readings \
   -H "Content-Type: application/json" \
   -d '{
     "id": "READ-012",
